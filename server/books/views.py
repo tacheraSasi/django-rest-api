@@ -12,12 +12,14 @@ import json
 @require_http_methods(["GET","POST"])
 def index(request):
     if request.method == "GET":
-        book  = Book.objects.all()
-        data = serializers.serialize("json",book)
+        books  = Book.objects.all()
+        # data = serializers.serialize("json",book)
+        data = [{'id': book.id, 'title': book.title, 'author': book.author} for book in books]
         return JsonResponse(data, safe=False, content_type = "application/json")
     elif request.method == "POST":
         try:
             data = json.loads(request.body)
+            print(request.body)
             if data == None:
                 return JsonResponse({"error":"Body is empty"},status = 400)
             
